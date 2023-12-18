@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:pishco_app/view_model.dart';
+import 'package:provider/provider.dart';
+import 'Request.dart';
 
 class NewRequestPage extends StatefulWidget {
   @override
@@ -15,8 +18,12 @@ class _NewRequestPageState extends State<NewRequestPage> {
   TextEditingController additionalNotesController = TextEditingController();
   String url = 'https://android-material.ir/test/login_.php';
 
+  //get requestsViewModel => null;
+
   @override
   Widget build(BuildContext context) {
+    var requestsViewModel = Provider.of<RequestsViewModel>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('درخواست جدید'),
@@ -48,7 +55,7 @@ class _NewRequestPageState extends State<NewRequestPage> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                _submitRequest();
+                _submitRequest(requestsViewModel);
               },
               child: Text('ثبت درخواست'),
             ),
@@ -58,7 +65,7 @@ class _NewRequestPageState extends State<NewRequestPage> {
     );
   }
 
-  Future<void> _submitRequest() async {
+  Future<void> _submitRequest(RequestsViewModel requestsViewModel) async {
     final response = await http.post(
       Uri.parse(url), // URL سرور خود را وارد کنید
       body: {
@@ -75,8 +82,11 @@ class _NewRequestPageState extends State<NewRequestPage> {
       print('درخواست با موفقیت ارسال شد.');
       print('پاسخ از سرور: ${response.body}');
 
+      // ارسال درخواست به ویومدل
+      requestsViewModel.addRequest(Request(name: nameController.text));
       // بازگشت به صفحه CollectionRequestPage با ارسال نتیجه به لیست
-      Navigator.pop(context, 'درخواست جدید');
+      // Navigator.pop(context, 'درخواست جدید');
+      Navigator.pop(context);
     } else {
       // درخواست ناموفق بوده است
       print('خطا در ارسال درخواست. کد وضعیت: ${response.statusCode}');

@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:pishco_app/view_model.dart';
 import 'CollectionRequestPage.dart';
+import 'package:provider/provider.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('طراحی با فلاتر'),
+    return ChangeNotifierProvider(
+      create: (context) => RequestsViewModel(),
+      child: MaterialApp(
+        home: Scaffold(
+          appBar: AppBar(
+            title: const Text('Flutter MVVM Example'),
+          ),
+          body: const YourWidget(),
         ),
-        body: const YourWidget(), // اینجا YourWidget را وارد کنید.
       ),
     );
   }
